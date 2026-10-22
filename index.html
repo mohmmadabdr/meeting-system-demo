@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>نظام إدارة الاجتماعات واللجان - نسخة تجريبية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{--blue:#2F5597;--blue2:#4472C4;--blue-soft:#eaf0fb;--bg:#f4f6fb;--card:#fff;--line:#e3e8f2;--text:#1d2433;--muted:#6b7488;--green:#1f9d63;--amber:#b7790a;--red:#d14343;--purple:#7a4fd0;--teal:#0f8b8d;--gray:#6b7488;--dark:#2c3446}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:'IBM Plex Sans Arabic',Tahoma,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.6}
+a{color:var(--blue2)}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+aside{background:var(--blue);color:#fff;padding:22px 14px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.brand{font-weight:700;font-size:18px;padding:0 10px 18px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:12px}
+.brand small{display:block;font-weight:400;opacity:.75;font-size:12px;margin-top:2px}
+nav a{display:flex;gap:10px;align-items:center;color:#fff;text-decoration:none;padding:10px 12px;border-radius:10px;opacity:.85;margin:2px 0;font-size:14.5px}
+nav a.on,nav a:hover{background:rgba(255,255,255,.15);opacity:1}
+nav a .ic{width:22px;text-align:center}
+.side-foot{margin-top:auto;font-size:12px;opacity:.75;padding:10px}
+.side-foot button{background:rgba(255,255,255,.15);color:#fff;border:0;border-radius:8px;padding:7px 10px;font:inherit;cursor:pointer;margin-top:6px}
+main{min-width:0}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:12px 24px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5}
+.persona{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.persona label{font-size:13px;color:var(--muted)}
+.persona select{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:#fff;min-width:230px}
+.rolechips{display:flex;gap:6px;flex-wrap:wrap}
+.demo-tag{background:#fff4e0;color:#8a5a00;border:1px solid #f3d9a6;border-radius:999px;padding:3px 12px;font-size:12px}
+.content{padding:24px;max-width:1200px}
+h1{font-size:22px;margin:0 0 4px}
+h2{font-size:17px;margin:0 0 12px}
+h3{font-size:15px;margin:0 0 8px}
+.sub{color:var(--muted);margin:0 0 20px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:16px}
+.grid{display:grid;gap:16px}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g2{grid-template-columns:1fr 1fr}
+.gm{grid-template-columns:1fr 340px}
+.stat{display:flex;flex-direction:column;gap:4px}
+.stat b{font-size:28px;color:var(--blue)}
+.stat span{color:var(--muted);font-size:13px}
+.stat.warn b{color:var(--red)}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:500;white-space:nowrap;background:#eef1f6;color:var(--gray)}
+.c-gray{background:#eef1f6;color:var(--gray)}.c-amber{background:#fff4e0;color:var(--amber)}.c-blue{background:var(--blue-soft);color:var(--blue)}.c-green{background:#e3f6ec;color:var(--green)}.c-purple{background:#f0eafc;color:var(--purple)}.c-teal{background:#e1f4f4;color:var(--teal)}.c-dark{background:#2c3446;color:#fff}.c-red{background:#fde8e8;color:var(--red)}
+.btn{font:inherit;font-size:14px;border:1px solid var(--line);background:#fff;color:var(--text);padding:8px 14px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn:hover{border-color:var(--blue2)}
+.btn.pri{background:var(--blue2);border-color:var(--blue2);color:#fff}
+.btn.pri:hover{background:var(--blue)}
+.btn.ok{background:var(--green);border-color:var(--green);color:#fff}
+.btn.bad{color:var(--red)}
+.btn.sm{padding:4px 10px;font-size:13px}
+.btn.on{background:var(--blue-soft);border-color:var(--blue2);color:var(--blue);font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:right;color:var(--muted);font-weight:500;font-size:13px;border-bottom:1px solid var(--line);padding:8px}
+td{border-bottom:1px solid var(--line);padding:10px 8px;vertical-align:top}
+tr:last-child td{border-bottom:0}
+.muted{color:var(--muted)}.small{font-size:13px}
+.task{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:0}
+.task .dot{width:9px;height:9px;border-radius:50%;background:var(--blue2);flex:none}
+.task .t{flex:1}
+.empty{color:var(--muted);text-align:center;padding:26px}
+.stepper{display:flex;gap:0;overflow-x:auto;padding:6px 0 2px}
+.step{flex:1;min-width:92px;text-align:center;position:relative;font-size:12px;color:var(--muted)}
+.step .n{width:28px;height:28px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;background:#eef1f6;font-weight:600;position:relative;z-index:1}
+.step:not(:last-child)::after{content:'';position:absolute;top:14px;right:50%;width:100%;height:2px;background:#e3e8f2}
+.step.done .n{background:var(--green);color:#fff}
+.step.done::after{background:var(--green)}
+.step.cur .n{background:var(--blue2);color:#fff;box-shadow:0 0 0 4px var(--blue-soft)}
+.step.cur{color:var(--blue);font-weight:600}
+.now{background:var(--blue-soft);border:1px solid #c9d8f3;border-radius:14px;padding:14px 16px;margin-bottom:16px}
+.now h3{color:var(--blue)}
+.item{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.item .hd{display:flex;gap:10px;align-items:flex-start}
+.item .num{background:var(--blue-soft);color:var(--blue);border-radius:8px;padding:0 9px;font-weight:600}
+.dec{background:#f7f9fc;border-right:3px solid var(--blue2);padding:8px 12px;border-radius:8px;margin-top:8px;font-size:14px}
+textarea,input,select{font:inherit;font-size:14px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#fff;color:var(--text);width:100%}
+textarea{min-height:70px;resize:vertical}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.person{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.person:last-child{border-bottom:0}
+.av{width:30px;height:30px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:inline-grid;place-items:center;font-size:12px;font-weight:600;margin-left:8px;flex:none}
+.tl{font-size:13px}
+.tl div{padding:6px 0 6px 0;border-right:2px solid var(--line);padding-right:12px;position:relative}
+.tl div::before{content:'';position:absolute;right:-6px;top:12px;width:10px;height:10px;border-radius:50%;background:var(--blue2)}
+.lock{background:#2c3446;color:#fff;border-radius:12px;padding:12px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.fpr{font-family:ui-monospace,Menlo,monospace;letter-spacing:1px;direction:ltr;display:inline-block}
+.overdue{color:var(--red);font-weight:600}
+.toast{position:fixed;bottom:22px;left:22px;background:#1d2433;color:#fff;padding:12px 18px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.2);z-index:99;max-width:min(420px,calc(100vw - 32px));animation:up .25s}
+@keyframes up{from{transform:translateY(12px);opacity:0}}
+.note{background:#fffaf0;border:1px dashed #e9c98a;border-radius:12px;padding:10px 14px;font-size:13px;color:#7a5a17;margin-bottom:16px}
+/* print overlay */
+#printWrap{position:fixed;inset:0;background:rgba(20,26,40,.6);z-index:50;overflow:auto;padding:24px 12px}
+#printWrap .bar{max-width:794px;margin:0 auto 12px;display:flex;gap:8px;justify-content:flex-start}
+.sheet{background:#fff;max-width:794px;margin:0 auto;padding:40px 46px;position:relative;font-size:13.5px;color:#111;overflow:hidden}
+.sheet .wm{position:absolute;inset:0;display:grid;place-items:center;font-size:110px;font-weight:700;color:rgba(209,67,67,.07);transform:rotate(-25deg);pointer-events:none}
+.sheet .sh{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--blue);padding-bottom:14px;margin-bottom:16px;gap:16px}
+.sheet h2{font-size:20px;margin:4px 0}
+.sheet table{font-size:12.5px;margin-bottom:14px}
+.sheet th,.sheet td{border:1px solid #cfd6e4;padding:6px 8px}
+.sheet th{background:#f1f4fa;color:#333}
+.sheet .sig td{height:42px}
+.sheet .foot{border-top:1px solid #cfd6e4;padding-top:10px;margin-top:16px;font-size:11.5px;color:#555;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.qr{width:96px;height:96px;flex:none}
+.qr img,.qr canvas{width:96px!important;height:96px!important}
+@media print{
+ body>*:not(#printWrap){display:none!important}
+ #printWrap{position:static;background:none;padding:0;overflow:visible}
+ #printWrap .bar{display:none}
+ .sheet{max-width:none;padding:0}
+ @page{size:A4;margin:16mm}
+}
+nav a .sb{display:none}
+.mbrand{display:none}
+/* ===== تابلت (أفقي وعمودي) ===== */
+@media(max-width:1100px){
+ .app{grid-template-columns:78px 1fr}
+ aside{padding:16px 10px;align-items:center}
+ .brand{font-size:24px;padding:0 0 12px;text-align:center}
+ .brand .bt,.brand small{display:none}
+ nav{width:100%}
+ nav a{flex-direction:column;gap:2px;padding:9px 4px;font-size:10.5px;text-align:center;line-height:1.3}
+ nav a .ic{font-size:20px;width:auto}
+ nav a .lb{display:none}
+ nav a .sb{display:block}
+ .side-foot{padding:6px 0;text-align:center}
+ .side-foot .ft{display:none}
+ .side-foot button{font-size:11px;padding:6px}
+ .gm{grid-template-columns:1fr}
+ .content{padding:20px}
+ .btn{min-height:40px}
+ .btn.sm{min-height:34px}
+ .item .row .btn.sm{padding:6px 14px}
+}
+@media(max-width:900px){
+ .g4{grid-template-columns:1fr 1fr}
+ .g2,.f3{grid-template-columns:1fr}
+ .persona select{min-width:0;flex:1}
+ .persona{flex:1}
+}
+/* ===== موبايل ===== */
+@media(max-width:760px){
+ body{font-size:15px;padding-bottom:calc(68px + env(safe-area-inset-bottom))}
+ .app{grid-template-columns:1fr}
+ aside{position:fixed;top:auto;bottom:0;right:0;left:0;height:auto;z-index:20;padding:4px 4px calc(4px + env(safe-area-inset-bottom));flex-direction:row;box-shadow:0 -4px 20px rgba(0,0,0,.12)}
+ aside .brand,aside .side-foot{display:none}
+ nav{display:flex;overflow-x:auto;gap:2px;scrollbar-width:none}
+ nav::-webkit-scrollbar{display:none}
+ nav a{flex:1 0 62px;margin:0;padding:7px 2px;border-radius:12px}
+ .mbrand{display:flex;width:100%;align-items:center;justify-content:space-between;gap:8px;font-weight:700;color:var(--blue)}
+ .mbrand button{font:inherit;font-size:12px;font-weight:400;border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 9px;color:var(--muted)}
+ .top{padding:10px 14px;gap:8px;position:static}
+ .top .demo-tag{display:none}
+ .persona label{width:100%}
+ .persona select{width:100%;flex:none}
+ .content{padding:14px}
+ h1{font-size:19px}
+ .card{padding:14px;border-radius:12px}
+ .grid{gap:12px}
+ .g4{grid-template-columns:1fr 1fr}
+ .stat b{font-size:24px}
+ .f2,.f3{grid-template-columns:1fr}
+ textarea,input,select{font-size:16px}
+ .now .row .btn{flex:1 1 auto;justify-content:center}
+ .task{flex-wrap:wrap}
+ .task .t{min-width:70%}
+ .lock{font-size:13px}
+ .toast{left:12px;right:12px;bottom:calc(80px + env(safe-area-inset-bottom));max-width:none}
+ /* الجداول تتحول لبطاقات */
+ table.stk tr:first-child{display:none}
+ table.stk tr{display:block;padding:10px 0;border-bottom:1px solid var(--line)}
+ table.stk tr:last-child{border-bottom:0}
+ table.stk td{display:block;position:relative;border:0;padding:4px 104px 4px 0;min-height:28px;text-align:right}
+ table.stk td::before{content:attr(data-label);position:absolute;right:0;top:5px;width:96px;color:var(--muted);font-size:12.5px;line-height:1.4}
+ table.stk td[data-label=""]{padding-right:0}
+ table.stk td[data-label=""]::before{display:none}
+ table.stk td select{max-width:100%}
+ .tw{overflow:visible}
+ #printWrap{padding:0}
+ #printWrap .bar{position:sticky;top:0;background:#1d2433;padding:10px;margin:0;max-width:none;z-index:2}
+ .sheet{padding:22px 16px;font-size:12.5px}
+ .sheet .sh{flex-direction:column-reverse}
+ .sheet .wm{font-size:70px}
+ .sheet table{font-size:11.5px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+ <aside>
+  <div class="brand">📋 <span class="bt">نظام الاجتماعات</span> <small>إدارة الاجتماعات واللجان والقرارات</small></div>
+  <nav id="nav"></nav>
+  <div class="side-foot"><span class="ft">نسخة تجريبية للعرض — البيانات وهمية وتُحفظ في متصفحك فقط.<br></span><button data-act="reset" title="إعادة البيانات التجريبية">↺ إعادة<span class="ft"> البيانات التجريبية</span></button></div>
+ </aside>
+ <main>
+  <div class="top">
+   <div class="mbrand"><span>📋 نظام الاجتماعات <span class="demo-tag" style="display:inline;font-weight:400">تجريبي</span></span><button data-act="reset">↺ إعادة البيانات</button></div>
+   <div class="persona">
+    <label for="persona">الدخول باسم:</label>
+    <select id="persona" data-change="persona"></select>
+    <div class="rolechips" id="rolechips"></div>
+   </div>
+   <span class="demo-tag">نسخة تجريبية (Demo)</span>
+  </div>
+  <div class="content" id="view"></div>
+ </main>
+</div>
+
+<script>
+/* =========================================================
+   نظام إدارة الاجتماعات - ديمو (بيانات وهمية / بدون سيرفر)
+   ========================================================= */
+const KEY='mms-demo-v1';
+function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function ago(days,h){const d=new Date();d.setDate(d.getDate()-days);d.setHours(h||10,0,0,0);return d.toISOString()}
+const TODAY=addDays(0), YEAR=new Date().getFullYear();
+
+const USERS={
+ u1:{name:'م. سامر الخطيب',title:'مدير النظام',admin:true},
+ u2:{name:'د. ليلى حداد',title:'المدير المالي'},
+ u3:{name:'أحمد العمري',title:'أمين سر اللجان'},
+ u4:{name:'رنا الزعبي',title:'رئيسة قسم المشتريات'},
+ u5:{name:'خالد النسور',title:'مهندس مشاريع'},
+ u6:{name:'هبة المصري',title:'المستشار القانوني'},
+ u7:{name:'يوسف الحياري',title:'مدير تقنية المعلومات'},
+ u8:{name:'سارة القضاة',title:'محاسبة أولى'}
+};
+const ROLE={chair:'رئيس اللجنة',coordinator:'منسق / أمين سر',member:'عضو'};
+const TYPES=['اجتماع دوري','اجتماع طارئ','اجتماع لجنة عطاءات','مجلس إدارة','ورشة عمل'];
+const CLS={normal:['عادي','c-gray'],confidential:['سري','c-amber'],secret:['سري جداً','c-red']};
+const ST={draft:['مسودة','c-gray'],pending:['بانتظار اعتماد الرئيس','c-amber'],scheduled:['أُرسلت الدعوات','c-blue'],in_session:['منعقد الآن','c-green'],minutes_draft:['تحرير المحضر','c-purple'],minutes_review:['مراجعة واعتماد المحضر','c-amber'],ready_print:['جاهز للطباعة والتوقيع','c-teal'],archived:['مؤرشف ومقفل','c-dark']};
+const FLOW=['draft','pending','scheduled','in_session','minutes_draft','minutes_review','ready_print','archived'];
+const STEPS=['المسودة','اعتماد الرئيس','الدعوات والحضور','الانعقاد والتصويت','تحرير المحضر','اعتماد المحضر','الطباعة والتوقيع','الأرشفة'];
+const DST={not_started:['لم يتم التنفيذ','c-red'],in_progress:['جاري العمل عليه','c-amber'],done:['تم التنفيذ','c-green']};
+const VOTE={yes:'موافق',no:'معارض',abstain:'ممتنع'};
+
+function item(id,title,o){return Object.assign({id,title,decision:'',votes:{},owner:'',due:'',dstatus:'not_started'},o||{})}
+function att(list){return list.map(([u,r,rsvp,present,reason])=>({u,r,rsvp,present:!!present,reason:reason||''}))}
+function H(days,u,action,h){return {at:ago(days,h),u,action}}
+function mk(o){return Object.assign({attachments:[],minutes:'',minutesApprovals:{},comments:[],history:[],signedFile:null,fingerprint:null,attendees:[]},o)}
+
+function seed(){
+ const s={me:'u3',users:USERS,seq:8,audit:[],
+  committees:[
+   {id:'c1',name:'لجنة المشتريات والعطاءات',short:'المشتريات',members:[{u:'u2',r:'chair',from:'2025-01-01'},{u:'u3',r:'coordinator',from:'2025-01-01'},{u:'u4',r:'member',from:'2025-01-01'},{u:'u5',r:'member',from:'2025-03-15'},{u:'u6',r:'member',from:'2025-01-01'},{u:'u8',r:'member',from:'2025-01-01',to:addDays(-45)}]},
+   {id:'c2',name:'لجنة التحول الرقمي',short:'التحول الرقمي',members:[{u:'u7',r:'chair',from:'2025-06-01'},{u:'u5',r:'coordinator',from:'2025-06-01'},{u:'u2',r:'member',from:'2025-06-01'},{u:'u4',r:'member',from:'2025-06-01'}]},
+   {id:'c3',name:'مجلس الإدارة',short:'مجلس الإدارة',members:[{u:'u2',r:'chair',from:'2024-01-01'},{u:'u6',r:'member',from:'2024-01-01'},{u:'u7',r:'member',from:'2024-01-01'}]}
+  ],
+  meetings:[]};
+ const m1=mk({id:'m1',ref:`MTG-${YEAR}-001`,committeeId:'c1',type:'اجتماع لجنة عطاءات',title:'دراسة عروض توريد أجهزة الحاسوب',date:addDays(-30),time:'10:00',location:'قاعة الاجتماعات الرئيسية - الطابق الثالث',classification:'confidential',status:'archived',
+  agenda:[item('a1','دراسة العروض الفنية والمالية المقدمة',{decision:'إحالة العطاء على الشركة (ب) لمطابقتها للمواصفات الفنية وبأقل سعر.',votes:{u2:'yes',u3:'yes',u4:'yes',u5:'abstain',u8:'yes'},owner:'u4',due:addDays(-12),dstatus:'done'}),
+   item('a2','اعتماد جدول التوريد',{decision:'التوريد على دفعتين خلال 60 يوماً من توقيع العقد.',votes:{u2:'yes',u3:'yes',u4:'yes',u5:'yes',u8:'yes'},owner:'u5',due:addDays(15),dstatus:'in_progress'}),
+   item('a3','تحديث نموذج تقييم الموردين',{decision:'تكليف قسم المشتريات بإعداد نموذج تقييم محدّث وعرضه في الاجتماع القادم.',votes:{u2:'yes',u3:'yes',u4:'no',u5:'yes',u8:'yes'},owner:'u4',due:addDays(-3),dstatus:'not_started'})],
+  attendees:att([['u2','chair','yes',1],['u3','coordinator','yes',1],['u4','member','yes',1],['u5','member','yes',1],['u6','member','no',0,'إجازة رسمية'],['u8','member','yes',1]]),
+  attachments:['عروض الموردين.pdf','جدول مقارنة الأسعار.xlsx'],
+  minutes:'افتتحت رئيسة اللجنة الاجتماع في تمام الساعة العاشرة صباحاً بحضور أغلبية الأعضاء واكتمال النصاب القانوني.\nتم استعراض العروض المقدمة من ثلاث شركات، ومناقشة الملاحظات الفنية لكل عرض، وتم اتخاذ القرارات المبينة في جدول الأعمال.\nاختُتم الاجتماع في تمام الساعة الحادية عشرة والنصف.',
+  minutesApprovals:{u2:true,u3:true,u4:true,u5:true,u8:true},signedFile:`MTG-${YEAR}-001-signed.pdf`,
+  history:[H(36,'u3','إنشاء الاجتماع كمسودة'),H(35,'u2','اعتماد عقد الاجتماع وإرسال الدعوات'),H(30,'u3','بدء الاجتماع وتسجيل الحضور'),H(30,'u3','إنهاء الاجتماع',12),H(28,'u3','إرسال المحضر للمراجعة'),H(26,'u2','الاعتماد النهائي للمحضر'),H(25,'u3','طباعة المحضر للتوقيع'),H(24,'u3','رفع النسخة الموقعة وأرشفة الاجتماع')]});
+ const m2=mk({id:'m2',ref:`MTG-${YEAR}-002`,committeeId:'c1',type:'اجتماع دوري',title:'الاجتماع الدوري لشهر تشرين الأول',date:addDays(-2),time:'09:30',location:'قاعة الاجتماعات الرئيسية',classification:'normal',status:'minutes_draft',
+  agenda:[item('a1','متابعة قرارات الاجتماع السابق',{decision:'',votes:{}}),item('a2','مراجعة خطة المشتريات للربع الأخير',{decision:'اعتماد خطة المشتريات للربع الأخير مع تأجيل بند الأثاث المكتبي.',votes:{u2:'yes',u3:'yes',u4:'yes',u5:'no'}}),item('a3','ما يستجد من أعمال')],
+  attendees:att([['u2','chair','yes',1],['u3','coordinator','yes',1],['u4','member','yes',1],['u5','member','yes',1],['u6','member','no',0,'مهمة عمل خارجية']]),
+  attachments:['خطة المشتريات Q4.pdf'],history:[H(8,'u3','إنشاء الاجتماع كمسودة'),H(7,'u2','اعتماد عقد الاجتماع وإرسال الدعوات'),H(2,'u3','بدء الاجتماع وتسجيل الحضور'),H(2,'u3','إنهاء الاجتماع',11)]});
+ const m3=mk({id:'m3',ref:`MTG-${YEAR}-003`,committeeId:'c2',type:'اجتماع دوري',title:'متابعة مشروع أتمتة الأرشيف',date:addDays(3),time:'11:00',location:'اجتماع عن بعد (Microsoft Teams)',classification:'normal',status:'scheduled',
+  agenda:[item('a1','عرض نسبة الإنجاز في مشروع الأرشفة الإلكترونية'),item('a2','اعتماد مزوّد خدمة المسح الضوئي'),item('a3','تحديد موعد التشغيل التجريبي')],
+  attendees:att([['u7','chair','yes'],['u5','coordinator','yes'],['u2','member','pending'],['u4','member','pending']]),
+  attachments:['تقرير الإنجاز.pdf'],history:[H(5,'u5','إنشاء الاجتماع كمسودة'),H(4,'u7','اعتماد عقد الاجتماع وإرسال الدعوات')]});
+ const m4=mk({id:'m4',ref:`MTG-${YEAR}-004`,committeeId:'c1',type:'اجتماع طارئ',title:'تمديد عقد صيانة المولدات',date:addDays(10),time:'12:00',location:'مكتب المدير المالي',classification:'normal',status:'draft',
+  agenda:[item('a1','عرض كتاب الشركة المورّدة بطلب التمديد'),item('a2','دراسة الأثر المالي للتمديد')],history:[H(0,'u3','إنشاء الاجتماع كمسودة',8)]});
+ const m5=mk({id:'m5',ref:`MTG-${YEAR}-005`,committeeId:'c3',type:'مجلس إدارة',title:'مناقشة الموازنة التقديرية للعام القادم',date:addDays(7),time:'13:00',location:'قاعة مجلس الإدارة',classification:'secret',status:'pending',
+  agenda:[item('a1','عرض مشروع الموازنة التقديرية'),item('a2','خطة التوظيف للعام القادم'),item('a3','الهيكل التنظيمي المقترح')],attachments:['مشروع الموازنة.xlsx','الهيكل التنظيمي.pdf'],history:[H(1,'u2','إنشاء الاجتماع كمسودة'),H(1,'u2','إرسال المسودة لاعتماد الرئيس',11)]});
+ const m6=mk({id:'m6',ref:`MTG-${YEAR}-006`,committeeId:'c2',type:'ورشة عمل',title:'ورشة متطلبات نظام إدارة الاجتماعات',date:addDays(-5),time:'10:00',location:'مختبر الحاسوب',classification:'normal',status:'minutes_review',
+  agenda:[item('a1','عرض احتياجات الأقسام',{decision:'اعتماد قائمة المتطلبات الأولية المرفقة.',votes:{u7:'yes',u5:'yes',u2:'yes',u4:'yes'},owner:'u5',due:addDays(20)}),item('a2','آلية التوقيع على المحاضر',{decision:'المرحلة الأولى: توقيع ورقي مع رمز QR للتحقق، والتوقيع الإلكتروني في المرحلة الثانية.',votes:{u7:'yes',u5:'yes',u2:'abstain',u4:'yes'},owner:'u7',due:addDays(45)})],
+  attendees:att([['u7','chair','yes',1],['u5','coordinator','yes',1],['u2','member','yes',1],['u4','member','yes',1]]),
+  minutes:'عُقدت الورشة بحضور جميع الأعضاء، وتم استعراض احتياجات الأقسام المختلفة ومناقشة آلية التوقيع على المحاضر وأرشفتها.',minutesApprovals:{u5:true,u4:true},
+  comments:[{u:'u4',t:'أقترح إضافة قسم الموارد البشرية لقائمة الأقسام المستفيدة.',at:ago(3)}],
+  history:[H(12,'u5','إنشاء الاجتماع كمسودة'),H(11,'u7','اعتماد عقد الاجتماع وإرسال الدعوات'),H(5,'u5','بدء الاجتماع وتسجيل الحضور'),H(5,'u5','إنهاء الاجتماع',13),H(4,'u5','إرسال المحضر للمراجعة')]});
+ const m7=mk({id:'m7',ref:`MTG-${YEAR}-007`,committeeId:'c1',type:'اجتماع لجنة عطاءات',title:'فتح عروض عطاء تجهيز قاعة التدريب',date:TODAY,time:'10:00',location:'قاعة الاجتماعات الرئيسية',classification:'confidential',status:'in_session',
+  agenda:[item('a1','فتح المغلفات والتحقق من الكفالات',{votes:{u2:'yes',u3:'yes'}}),item('a2','الإحالة المبدئية على أفضل عرض',{votes:{}})],
+  attendees:att([['u2','chair','yes',1],['u3','coordinator','yes',1],['u4','member','yes',1],['u5','member','pending',0],['u6','member','yes',1]]),
+  attachments:['محضر فتح العروض.pdf','كشف الكفالات.xlsx'],history:[H(6,'u3','إنشاء الاجتماع كمسودة'),H(5,'u2','اعتماد عقد الاجتماع وإرسال الدعوات'),H(0,'u3','بدء الاجتماع وتسجيل الحضور',10)]});
+ m1.fingerprint=fp(m1);
+ s.meetings=[m1,m2,m3,m4,m5,m6,m7];
+ s.meetings.forEach(m=>m.history.forEach(h=>s.audit.push({at:h.at,u:h.u,action:h.action,ref:m.ref})));
+ s.audit.sort((a,b)=>b.at.localeCompare(a.at));
+ return s;
+}
+
+let S=load();
+function load(){try{const s=localStorage.getItem(KEY);if(s)return JSON.parse(s)}catch(e){}return seed()}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+
+/* ---------- helpers ---------- */
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const me=()=>S.me, U=id=>S.users[id]||{name:'—',title:''};
+const com=id=>S.committees.find(c=>c.id===id);
+const now=()=>new Date().toISOString();
+const ini=n=>n.replace(/^(د\.|م\.)\s*/,'').split(' ').map(w=>w[0]).slice(0,2).join(' ');
+function fmtD(d){if(!d)return '—';try{return new Date(d+'T00:00').toLocaleDateString('ar-JO-u-nu-latn',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}catch(e){return d}}
+function fmtDT(d){try{return new Date(d).toLocaleString('ar-JO-u-nu-latn',{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})}catch(e){return d}}
+function fp(m){const str=JSON.stringify([m.ref,m.agenda.map(i=>[i.title,i.decision,i.votes]),m.minutes,m.attendees.map(a=>[a.u,a.present])]);let h=0x811c9dc5,h2=5381;for(let i=0;i<str.length;i++){const c=str.charCodeAt(i);h=Math.imul(h^c,16777619)>>>0;h2=(Math.imul(h2,33)^c)>>>0}return (h.toString(16).padStart(8,'0')+h2.toString(16).padStart(8,'0')).toUpperCase().replace(/(.{4})(?!$)/g,'$1-')}
+function activeMembers(c){return c.members.filter(x=>!x.to)}
+function roleIn(cid,uid=me()){const c=com(cid);const m=c&&activeMembers(c).find(x=>x.u===uid);return m?m.r:null}
+function hasCoordinator(cid){return activeMembers(com(cid)).some(x=>x.r==='coordinator')}
+function isCoord(cid,uid=me()){const r=roleIn(cid,uid);return r==='coordinator'||(r==='chair'&&!hasCoordinator(cid))}
+function isChair(cid,uid=me()){return roleIn(cid,uid)==='chair'}
+function isAdmin(uid=me()){return !!U(uid).admin}
+function myAtt(m,uid=me()){return m.attendees.find(a=>a.u===uid)}
+function canView(m){
+ if(m.status==='draft')return isCoord(m.committeeId)||isChair(m.committeeId);
+ if(roleIn(m.committeeId)||myAtt(m))return true;
+ if(m.classification==='secret')return false;
+ return isAdmin();
+}
+function tally(i){const t={yes:0,no:0,abstain:0};Object.values(i.votes).forEach(v=>t[v]!=null&&t[v]++);return t}
+function chip(t,c){return `<span class="chip ${c}">${esc(t)}</span>`}
+function stChip(m){return chip(ST[m.status][0],ST[m.status][1])}
+function clsChip(m){return chip((m.classification!=='normal'?'🔒 ':'')+CLS[m.classification][0],CLS[m.classification][1])}
+function log(action,m){const e={at:now(),u:me(),action,ref:m?m.ref:''};S.audit.unshift(e);if(m)m.history.push({at:e.at,u:e.u,action})}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),3400)}
+function roleSummary(uid){const out=[];if(U(uid).admin)out.push(chip('مدير النظام','c-dark'));S.committees.forEach(c=>{const r=roleIn(c.id,uid);if(r)out.push(chip(`${r==='chair'?'رئيس':r==='coordinator'?'منسق':'عضو'}: ${c.short}`,r==='chair'?'c-purple':r==='coordinator'?'c-teal':'c-blue'))});return out.join('')}
+function allDecisions(){const out=[];S.meetings.forEach(m=>{if(FLOW.indexOf(m.status)<4)return;m.agenda.forEach(i=>{if(i.decision&&(canView(m)||i.owner===me()))out.push({m,i})})});return out}
+function canEditDec(m,i){return i.owner===me()||isCoord(m.committeeId)}
+const byDate=(a,b)=>(a.date+a.time).localeCompare(b.date+b.time);
+
+function myTasks(){
+ const t=[];
+ S.meetings.forEach(m=>{const co=isCoord(m.committeeId),ch=isChair(m.committeeId),a=myAtt(m);
+  if(m.status==='draft'&&co)t.push(['أكمل المسودة وأرسلها لاعتماد الرئيس',m]);
+  if(m.status==='pending'&&ch)t.push(['اعتمد عقد الاجتماع أو أعده للمنسق',m]);
+  if(m.status==='scheduled'&&a&&a.rsvp==='pending')t.push(['أكّد حضورك أو اعتذر',m]);
+  if(m.status==='in_session'&&a&&a.present)t.push(['الاجتماع منعقد الآن — صوّت على البنود',m]);
+  if(m.status==='minutes_draft'&&co)t.push(['حرّر المحضر وحدّد مسؤولي القرارات',m]);
+  if(m.status==='minutes_review'&&a&&a.present&&!m.minutesApprovals[me()])t.push(['راجع المحضر ووافق عليه',m]);
+  if(m.status==='minutes_review'&&ch)t.push(['اعتمد المحضر نهائياً',m]);
+  if(m.status==='ready_print'&&co)t.push(['اطبع المحضر للتوقيع وارفع النسخة الموقعة',m]);
+ });
+ allDecisions().forEach(({m,i})=>{if(i.owner===me()&&i.dstatus!=='done')t.push([`حدّث حالة القرار: ${i.decision.slice(0,55)}…`,m,'#/decisions'])});
+ return t;
+}
+
+/* ---------- views ---------- */
+function viewDash(){
+ const vis=S.meetings.filter(canView);
+ const up=vis.filter(m=>['pending','scheduled','in_session'].includes(m.status)).sort(byDate);
+ const decs=allDecisions(),over=decs.filter(d=>d.i.dstatus!=='done'&&d.i.due&&d.i.due<TODAY);
+ const arch=vis.filter(m=>m.status==='archived').length;
+ const done=decs.filter(d=>d.i.dstatus==='done').length;
+ const tasks=myTasks();
+ return `<h1>أهلاً، ${esc(U(me()).name)}</h1><p class="sub">${esc(U(me()).title)} — هذه نظرة سريعة على اجتماعاتك والمطلوب منك.</p>
+ <div class="grid g4">
+  <div class="card stat"><b>${up.length}</b><span>اجتماعات قادمة / جارية</span></div>
+  <div class="card stat"><b>${tasks.length}</b><span>مهام بانتظارك</span></div>
+  <div class="card stat warn"><b>${over.length}</b><span>قرارات متأخرة عن موعدها</span></div>
+  <div class="card stat"><b>${decs.length?Math.round(done/decs.length*100):0}%</b><span>نسبة تنفيذ القرارات</span></div>
+ </div>
+ <div class="grid g2">
+  <div class="card"><h2>📌 المطلوب منك</h2>${tasks.length?tasks.map(([t,m,l])=>`<div class="task"><span class="dot"></span><div class="t">${esc(t)}<div class="small muted">${esc(m.ref)} · ${esc(m.title)}</div></div><a class="btn sm" href="${l||'#/meeting/'+m.id}">فتح</a></div>`).join(''):'<div class="empty">لا توجد مهام حالياً ✓</div>'}</div>
+  <div class="card"><h2>🗓️ الاجتماعات القادمة</h2>${up.length?up.map(m=>`<div class="task"><span class="dot" style="background:var(--green)"></span><div class="t"><a href="#/meeting/${m.id}">${esc(m.title)}</a><div class="small muted">${fmtD(m.date)} · ${m.time} · ${esc(com(m.committeeId).short)}</div></div>${stChip(m)}</div>`).join(''):'<div class="empty">لا توجد اجتماعات قادمة</div>'}</div>
+ </div>
+ ${over.length?`<div class="card"><h2>⚠️ قرارات متأخرة</h2><div class="tw"><table><tr><th>القرار</th><th>المسؤول</th><th>تاريخ الاستحقاق</th><th>الحالة</th></tr>${over.map(({m,i})=>`<tr><td>${esc(i.decision)}<div class="small muted">${esc(m.ref)}</div></td><td>${esc(U(i.owner).name)}</td><td class="overdue">${i.due}</td><td>${chip(...DST[i.dstatus])}</td></tr>`).join('')}</table></div></div>`:''}`;
+}
+
+let filter='all';
+function viewMeetings(){
+ const vis=S.meetings.filter(canView).sort((a,b)=>byDate(b,a));
+ const list=filter==='all'?vis:vis.filter(m=>m.status===filter);
+ const canCreate=S.committees.some(c=>isCoord(c.id));
+ const hidden=S.meetings.length-vis.length;
+ return `<div class="row between"><div><h1>الاجتماعات</h1><p class="sub">جميع الاجتماعات التي تملك صلاحية الاطلاع عليها.</p></div>${canCreate?'<a class="btn pri" href="#/new">＋ اجتماع جديد</a>':''}</div>
+ <div class="row" style="margin-bottom:14px"><button class="btn sm ${filter==='all'?'on':''}" data-act="filter" data-v="all">الكل (${vis.length})</button>${FLOW.map(s=>{const n=vis.filter(m=>m.status===s).length;return n?`<button class="btn sm ${filter===s?'on':''}" data-act="filter" data-v="${s}">${ST[s][0]} (${n})</button>`:''}).join('')}</div>
+ <div class="card tw"><table><tr><th>المرجع</th><th>الاجتماع</th><th>اللجنة</th><th>الموعد</th><th>التصنيف</th><th>الحالة</th></tr>
+ ${list.map(m=>`<tr><td class="small fpr">${esc(m.ref)}</td><td><a href="#/meeting/${m.id}">${esc(m.title)}</a><div class="small muted">${esc(m.type)}</div></td><td>${esc(com(m.committeeId).short)}</td><td class="small">${fmtD(m.date)}<br>${m.time}</td><td>${clsChip(m)}</td><td>${stChip(m)}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">لا يوجد</td></tr>'}</table></div>
+ ${hidden?`<p class="small muted">🔒 يوجد ${hidden} اجتماع/اجتماعات غير ظاهرة لك بسبب الصلاحيات أو التصنيف السري (حتى مدير النظام لا يرى الاجتماعات المصنفة "سري جداً" إلا إذا كان عضواً).</p>`:''}`;
+}
+
+function viewNew(){
+ const cs=S.committees.filter(c=>isCoord(c.id));
+ if(!cs.length)return `<div class="card empty">🔒 لا تملك صلاحية إنشاء اجتماعات. إنشاء الاجتماع متاح لمنسق اللجنة (أو رئيسها إذا لم يكن لها منسق).</div>`;
+ return `<h1>اجتماع جديد</h1><p class="sub">يُحفظ الاجتماع كمسودة، ثم يُرسل لرئيس اللجنة للاعتماد قبل إرسال الدعوات للأعضاء.</p>
+ <form class="card" id="newForm">
+  <div class="f2"><div class="fld"><label>اللجنة</label><select name="c">${cs.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
+  <div class="fld"><label>نوع الاجتماع</label><select name="type">${TYPES.map(t=>`<option>${t}</option>`).join('')}</select></div></div>
+  <div class="fld"><label>عنوان الاجتماع</label><input name="title" required placeholder="مثال: دراسة عروض عطاء الصيانة"></div>
+  <div class="f3"><div class="fld"><label>التاريخ</label><input type="date" name="date" required value="${addDays(7)}"></div>
+  <div class="fld"><label>الوقت</label><input type="time" name="time" required value="10:00"></div>
+  <div class="fld"><label>درجة السرية</label><select name="cls"><option value="normal">عادي</option><option value="confidential">سري</option><option value="secret">سري جداً</option></select></div></div>
+  <div class="fld"><label>المكان / رابط الاجتماع</label><input name="loc" required value="قاعة الاجتماعات الرئيسية"></div>
+  <div class="fld"><label>بنود جدول الأعمال (كل بند في سطر)</label><textarea name="agenda" required style="min-height:110px">متابعة قرارات الاجتماع السابق
+ما يستجد من أعمال</textarea></div>
+  <div class="fld"><label>المرفقات</label><input type="file" name="files" multiple></div>
+  <div class="row"><button class="btn pri" type="submit">حفظ كمسودة</button><a class="btn" href="#/meetings">إلغاء</a></div>
+ </form>`;
+}
+
+function stepper(m){const k=FLOW.indexOf(m.status);return `<div class="stepper">${STEPS.map((s,i)=>`<div class="step ${i<k||m.status==='archived'?'done':i===k?'cur':''}"><div class="n">${i<k||m.status==='archived'?'✓':i+1}</div>${s}</div>`).join('')}</div>`}
+
+function nowBox(m){
+ const co=isCoord(m.committeeId),ch=isChair(m.committeeId),a=myAtt(m),id=m.id;const b=[];let msg='';
+ const pend=m.attendees.filter(x=>x.rsvp==='pending').length;
+ switch(m.status){
+  case 'draft':msg='الاجتماع مسودة ولا يراه إلا المنسق والرئيس.';if(co)b.push(`<button class="btn pri" data-act="submit" data-id="${id}">إرسال لرئيس اللجنة للاعتماد</button>`,`<button class="btn bad" data-act="delDraft" data-id="${id}">حذف المسودة</button>`);break;
+  case 'pending':msg='بانتظار موافقة رئيس اللجنة على عقد الاجتماع. عند الاعتماد تُرسل الدعوات تلقائياً لأعضاء اللجنة الحاليين.';if(ch)b.push(`<button class="btn ok" data-act="approve" data-id="${id}">✓ اعتماد وإرسال الدعوات</button>`,`<button class="btn bad" data-act="reject" data-id="${id}">إعادة للمنسق مع ملاحظة</button>`);break;
+  case 'scheduled':msg=`تم إرسال الدعوات. ${pend?`${pend} عضو لم يؤكد الحضور بعد.`:'جميع الأعضاء ردّوا على الدعوة.'}`;
+   if(a&&a.rsvp!=='yes')b.push(`<button class="btn ok" data-act="rsvp" data-v="yes" data-id="${id}">✓ سأحضر</button>`);
+   if(a&&a.rsvp!=='no')b.push(`<button class="btn bad" data-act="rsvp" data-v="no" data-id="${id}">اعتذار عن الحضور</button>`);
+   if(co){if(pend)b.push(`<button class="btn" data-act="remind" data-id="${id}">🔔 إرسال تذكير</button>`);b.push(`<button class="btn pri" data-act="start" data-id="${id}">▶ بدء الاجتماع</button>`)}break;
+  case 'in_session':{const p=m.attendees.filter(x=>x.present).length;msg=`الاجتماع منعقد. الحضور ${p} من ${m.attendees.length} — ${p>m.attendees.length/2?'النصاب مكتمل ✓':'⚠️ النصاب غير مكتمل'}. ${a&&a.present?'يمكنك التصويت على البنود أدناه.':''}`;
+   if(co)b.push(`<button class="btn pri" data-act="end" data-id="${id}">■ إنهاء الاجتماع والانتقال للمحضر</button>`);break}
+  case 'minutes_draft':msg='يقوم المنسق بتحرير نص المحضر وصياغة القرارات وتحديد المسؤول عن تنفيذ كل قرار وموعده.';if(co)b.push(`<button class="btn pri" data-act="toReview" data-id="${id}">إرسال المحضر للأعضاء للمراجعة</button>`);break;
+  case 'minutes_review':{const pr=m.attendees.filter(x=>x.present),ok=pr.filter(x=>m.minutesApprovals[x.u]).length;msg=`وافق ${ok} من ${pr.length} من الأعضاء الحاضرين على المحضر.`;
+   if(a&&a.present&&!m.minutesApprovals[me()])b.push(`<button class="btn ok" data-act="okMin" data-id="${id}">✓ أوافق على المحضر</button>`);
+   if(a&&a.present)b.push(`<button class="btn" data-act="comment" data-id="${id}">💬 إضافة ملاحظة</button>`);
+   if(ch)b.push(`<button class="btn pri" data-act="finalize" data-id="${id}">الاعتماد النهائي للمحضر</button>`);break}
+  case 'ready_print':msg='المحضر معتمد إلكترونياً. يطبع المنسق النسخة النهائية (عليها رمز QR وبصمة المحضر)، يوقّعها الأعضاء حضورياً، ثم تُرفع النسخة الموقعة لأرشفة الاجتماع وإقفاله.';
+   if(co)b.push(`<button class="btn pri" data-act="print" data-id="${id}">🖨️ طباعة المحضر للتوقيع</button>`,`<label class="btn ok">⬆ رفع النسخة الموقعة (PDF/صورة)<input type="file" accept=".pdf,image/*" data-change="upload" data-id="${id}" hidden></label>`);break;
+  case 'archived':return `<div class="lock">🔒 <b>الاجتماع مؤرشف ومقفل</b> — لا يمكن تعديل المحضر أو القرارات. النسخة الموقعة: <b>${esc(m.signedFile)}</b> · بصمة المحضر: <span class="fpr">${m.fingerprint}</span>${isCoord(m.committeeId)?` <button class="btn sm" data-act="print" data-id="${id}">عرض/طباعة نسخة</button>`:''}</div>`;
+ }
+ return `<div class="now"><h3>المرحلة الحالية: ${ST[m.status][0]}</h3><p class="small" style="margin:0 0 ${b.length?10:0}px">${msg}</p>${b.length?`<div class="row">${b.join('')}</div>`:''}</div>`;
+}
+
+function agendaHtml(m){
+ const co=isCoord(m.committeeId),a=myAtt(m),k=FLOW.indexOf(m.status);
+ return m.agenda.map((i,n)=>{const t=tally(i),mv=i.votes[me()];
+  let body='';
+  if(m.status==='in_session'){
+   body+=`<div class="row small" style="margin-top:8px">${chip('موافق '+t.yes,'c-green')}${chip('معارض '+t.no,'c-red')}${chip('ممتنع '+t.abstain,'c-gray')}</div>`;
+   if(a&&a.present)body+=`<div class="row" style="margin-top:8px"><span class="small muted">صوتك:</span>${Object.entries(VOTE).map(([v,l])=>`<button class="btn sm ${mv===v?'on':''}" data-act="vote" data-v="${v}" data-item="${i.id}" data-id="${m.id}">${l}</button>`).join('')}</div>`;
+   if(co)body+=`<div class="fld" style="margin-top:10px;margin-bottom:0"><label>نص القرار (يكتبه المنسق)</label><textarea data-change="dec" data-item="${i.id}" data-id="${m.id}" placeholder="صياغة القرار المتخذ في هذا البند…">${esc(i.decision)}</textarea></div>`;
+  }else if(m.status==='minutes_draft'&&co){
+   body+=`<div class="row small" style="margin-top:8px">${chip('موافق '+t.yes,'c-green')}${chip('معارض '+t.no,'c-red')}${chip('ممتنع '+t.abstain,'c-gray')}</div>
+   <div class="fld" style="margin-top:10px"><label>نص القرار</label><textarea data-change="dec" data-item="${i.id}" data-id="${m.id}" placeholder="اتركه فارغاً إذا لم يُتخذ قرار">${esc(i.decision)}</textarea></div>
+   <div class="f2"><div class="fld" style="margin:0"><label>المسؤول عن التنفيذ</label><select data-change="owner" data-item="${i.id}" data-id="${m.id}"><option value="">—</option>${Object.keys(S.users).filter(u=>!S.users[u].admin).map(u=>`<option value="${u}" ${i.owner===u?'selected':''}>${esc(U(u).name)}</option>`).join('')}</select></div>
+   <div class="fld" style="margin:0"><label>تاريخ الاستحقاق</label><input type="date" value="${i.due}" data-change="due" data-item="${i.id}" data-id="${m.id}"></div></div>`;
+  }else if(k>=4&&i.decision){
+   body+=`<div class="dec"><b>القرار:</b> ${esc(i.decision)}<div class="row small muted" style="margin-top:6px">${i.owner?`<span>👤 ${esc(U(i.owner).name)}</span>`:''}${i.due?`<span>📅 ${i.due}</span>`:''}<span>التصويت: ${t.yes} موافق · ${t.no} معارض · ${t.abstain} ممتنع</span>${m.status==='archived'?chip(...DST[i.dstatus]):''}</div></div>`;
+  }else if(k>=4){body+=`<div class="small muted" style="margin-top:6px">لم يُتخذ قرار في هذا البند.</div>`}
+  return `<div class="item"><div class="hd"><span class="num">${n+1}</span><b style="flex:1">${esc(i.title)}</b></div>${body}</div>`}).join('');
+}
+
+function viewMeeting(id){
+ const m=S.meetings.find(x=>x.id===id);
+ if(!m)return `<div class="card empty">الاجتماع غير موجود.</div>`;
+ if(!canView(m))return `<div class="card empty">🔒 لا تملك صلاحية الاطلاع على هذا الاجتماع.<br><span class="small">الاجتماعات ${m.status==='draft'?'المسودة تظهر للمنسق والرئيس فقط':'المصنّفة "سري جداً" تظهر لأعضاء اللجنة فقط'}.</span></div>`;
+ const c=com(m.committeeId),co=isCoord(m.committeeId),k=FLOW.indexOf(m.status);
+ const rs={yes:chip('مؤكد','c-green'),no:chip('معتذر','c-red'),pending:chip('لم يرد','c-gray')};
+ const minutes=k<4?'':(m.status==='minutes_draft'&&co
+  ?`<div class="card"><h2>📝 نص المحضر</h2><textarea data-change="minutes" data-id="${m.id}" style="min-height:150px" placeholder="افتتح الرئيس الاجتماع في تمام الساعة… وتمت مناقشة…">${esc(m.minutes)}</textarea><p class="small muted" style="margin:6px 0 0">يُحفظ تلقائياً.</p></div>`
+  :`<div class="card"><h2>📝 نص المحضر</h2>${m.minutes?`<div style="white-space:pre-wrap">${esc(m.minutes)}</div>`:'<div class="muted small">لم يُكتب المحضر بعد.</div>'}
+   ${k>=5?`<h3 style="margin-top:14px">موافقات الأعضاء الحاضرين</h3>${m.attendees.filter(x=>x.present).map(x=>`<div class="person"><span>${esc(U(x.u).name)}</span>${m.minutesApprovals[x.u]?chip('✓ وافق','c-green'):chip('⏳ بانتظار','c-gray')}</div>`).join('')}`:''}
+   ${m.comments.length?`<h3 style="margin-top:14px">الملاحظات</h3>${m.comments.map(x=>`<div class="dec"><b>${esc(U(x.u).name)}:</b> ${esc(x.t)}<div class="small muted">${fmtDT(x.at)}</div></div>`).join('')}`:''}</div>`);
+ return `<div class="row between" style="align-items:flex-start"><div><div class="small muted fpr">${esc(m.ref)}</div><h1>${esc(m.title)}</h1>
+  <div class="row small muted" style="margin:6px 0 16px">${stChip(m)}${clsChip(m)}${chip(m.type,'c-blue')}<span>🏛️ ${esc(c.name)}</span><span>📅 ${fmtD(m.date)} · ${m.time}</span><span>📍 ${esc(m.location)}</span></div></div></div>
+ <div class="card">${stepper(m)}</div>
+ ${nowBox(m)}
+ <div class="grid gm">
+  <div><div class="card"><h2>📋 جدول الأعمال ${k>=3?'والقرارات':''}</h2>${agendaHtml(m)}</div>${minutes}</div>
+  <div>
+   <div class="card"><h2>👥 الأعضاء ${m.attendees.length?`(${m.attendees.length})`:''}</h2>
+   ${m.attendees.length?m.attendees.map(x=>`<div class="person"><div class="row" style="gap:0;flex-wrap:nowrap"><span class="av">${ini(U(x.u).name)}</span><div>${esc(U(x.u).name)}<div class="small muted">${ROLE[x.r]}${x.reason?` · ${esc(x.reason)}`:''}</div></div></div>
+    <div>${k>=3?(m.status==='in_session'&&co?`<label class="small row" style="gap:4px;flex-wrap:nowrap"><input type="checkbox" style="width:auto" ${x.present?'checked':''} data-act="present" data-u="${x.u}" data-id="${m.id}">حاضر</label>`:(x.present?chip('حضر','c-green'):chip('غائب','c-red'))):rs[x.rsvp]}</div></div>`).join('')
+   :`<p class="small muted">تُحدد قائمة المدعوين عند اعتماد الاجتماع من أعضاء اللجنة الحاليين:</p>${activeMembers(c).map(x=>`<div class="person"><span>${esc(U(x.u).name)}</span><span class="small muted">${ROLE[x.r]}</span></div>`).join('')}`}
+   ${m.attendees.length?'<p class="small muted" style="margin:8px 0 0">قائمة الأعضاء محفوظة كما كانت وقت الاجتماع، ولا تتأثر بتغيير أعضاء اللجنة لاحقاً.</p>':''}</div>
+   <div class="card"><h2>📎 المرفقات</h2>${m.attachments.length?m.attachments.map(f=>`<div class="person"><span>📄 ${esc(f)}</span>${m.classification==='secret'?chip('عرض فقط','c-red'):'<span class="small muted">تنزيل</span>'}</div>`).join(''):'<div class="small muted">لا توجد مرفقات</div>'}
+   ${m.signedFile?`<div class="person"><span>✍️ <b>${esc(m.signedFile)}</b></span>${chip('النسخة الموقعة','c-dark')}</div>`:''}</div>
+   <div class="card"><h2>🕓 سجل الاجتماع</h2><div class="tl">${m.history.slice().reverse().map(h=>`<div><b>${esc(h.action)}</b><br><span class="muted">${esc(U(h.u).name)} · ${fmtDT(h.at)}</span></div>`).join('')}</div></div>
+  </div>
+ </div>`;
+}
+
+function viewDecisions(){
+ const d=allDecisions();let f=decFilter;
+ const list=d.filter(x=>f==='all'||(f==='mine'?x.i.owner===me():f==='over'?(x.i.dstatus!=='done'&&x.i.due&&x.i.due<TODAY):x.i.dstatus===f));
+ return `<h1>متابعة القرارات</h1><p class="sub">كل قرار له مسؤول وتاريخ استحقاق وحالة تنفيذ. يحدّث الحالة المسؤول عن القرار أو منسق اللجنة.</p>
+ <div class="row" style="margin-bottom:14px">${[['all','الكل'],['mine','قراراتي'],['over','المتأخرة'],['not_started','لم يتم التنفيذ'],['in_progress','جاري العمل'],['done','تم التنفيذ']].map(([k,l])=>`<button class="btn sm ${f===k?'on':''}" data-act="decFilter" data-v="${k}">${l}</button>`).join('')}</div>
+ <div class="card tw"><table><tr><th>القرار</th><th>الاجتماع</th><th>المسؤول</th><th>الاستحقاق</th><th>الحالة</th></tr>
+ ${list.map(({m,i})=>{const late=i.dstatus!=='done'&&i.due&&i.due<TODAY;return `<tr><td>${esc(i.decision)}</td><td class="small">${canView(m)?`<a href="#/meeting/${m.id}">${esc(m.ref)}</a>`:esc(m.ref)}<div class="muted">${esc(com(m.committeeId).short)}</div></td><td class="small">${esc(U(i.owner).name)}</td><td class="small ${late?'overdue':''}">${i.due||'—'}${late?'<br>متأخر':''}</td>
+ <td>${canEditDec(m,i)&&m.status==='archived'?`<select data-change="dstatus" data-item="${i.id}" data-id="${m.id}" style="min-width:150px">${Object.entries(DST).map(([k,v])=>`<option value="${k}" ${i.dstatus===k?'selected':''}>${v[0]}</option>`).join('')}</select>`:chip(...DST[i.dstatus])}</td></tr>`}).join('')||'<tr><td colspan="5" class="empty">لا توجد قرارات</td></tr>'}</table></div>
+ <p class="small muted">متابعة التنفيذ تبدأ بعد أرشفة الاجتماع واعتماد المحضر الموقع.</p>`;
+}
+let decFilter='all';
+
+function viewArchive(){
+ const list=S.meetings.filter(m=>m.status==='archived'&&canView(m));
+ return `<h1>الأرشيف</h1><p class="sub">الاجتماعات المقفلة مع نسخها الموقعة. كل محضر مطبوع يحمل رمز QR وبصمة للتحقق من أصالته.</p>
+ <div class="card tw"><table><tr><th>المرجع</th><th>الاجتماع</th><th>التاريخ</th><th>النسخة الموقعة</th><th>بصمة المحضر</th><th></th></tr>
+ ${list.map(m=>`<tr><td class="small fpr">${esc(m.ref)}</td><td><a href="#/meeting/${m.id}">${esc(m.title)}</a><div class="small muted">${esc(com(m.committeeId).name)}</div></td><td class="small">${m.date}</td><td class="small">✍️ ${esc(m.signedFile)}</td><td class="small fpr">${m.fingerprint}</td><td><a class="btn sm" href="#/verify/${encodeURIComponent(m.ref)}">تحقق</a></td></tr>`).join('')||'<tr><td colspan="6" class="empty">لا توجد اجتماعات مؤرشفة</td></tr>'}</table></div>`;
+}
+
+function viewCommittees(){
+ const ad=isAdmin();const list=S.committees.filter(c=>ad||roleIn(c.id));
+ return `<h1>اللجان والأعضاء</h1><p class="sub">الصلاحية مرتبطة باللجنة: نفس الشخص قد يكون منسقاً في لجنة وعضواً عادياً في أخرى. ${ad?'بصفتك مدير النظام يمكنك تعديل العضويات.':''}</p>
+ <div class="note">💡 عند تغيير أعضاء لجنة، تبقى الاجتماعات السابقة كما هي لأن كل اجتماع يحفظ قائمة أعضائه وقت انعقاده. والعضو المنتهية عضويته يبقى ظاهراً في السجل مع تاريخ الانتهاء.</div>
+ ${list.map(c=>`<div class="card"><div class="row between"><h2 style="margin:0">${esc(c.name)}</h2>${!hasCoordinator(c.id)?chip('بدون منسق — الرئيس يتولى مهام التنسيق','c-amber'):''}</div>
+ <div class="tw" style="margin-top:10px"><table><tr><th>العضو</th><th>الدور</th><th>من</th><th>إلى</th>${ad?'<th></th>':''}</tr>
+ ${c.members.map((x,n)=>`<tr style="${x.to?'opacity:.55':''}"><td>${esc(U(x.u).name)}<div class="small muted">${esc(U(x.u).title)}</div></td><td>${ROLE[x.r]}</td><td class="small">${x.from||'—'}</td><td class="small">${x.to?x.to+' (منتهية)':'حالياً'}</td>${ad?`<td>${x.to?'':`<button class="btn sm bad" data-act="endMember" data-c="${c.id}" data-n="${n}">إنهاء العضوية</button>`}</td>`:''}</tr>`).join('')}</table></div>
+ ${ad?`<div class="row" style="margin-top:12px"><select id="nu-${c.id}" style="width:auto">${Object.keys(S.users).filter(u=>!S.users[u].admin&&!activeMembers(c).some(x=>x.u===u)).map(u=>`<option value="${u}">${esc(U(u).name)}</option>`).join('')}</select><select id="nr-${c.id}" style="width:auto"><option value="member">عضو</option><option value="coordinator">منسق</option><option value="chair">رئيس</option></select><button class="btn sm pri" data-act="addMember" data-c="${c.id}">＋ إضافة عضو</button></div>`:''}</div>`).join('')}`;
+}
+
+function viewAudit(){
+ if(!isAdmin())return `<div class="card empty">🔒 سجل التدقيق متاح لمدير النظام فقط.</div>`;
+ return `<h1>سجل التدقيق</h1><p class="sub">كل عملية في النظام تُسجّل: من قام بها، ومتى، وعلى أي اجتماع. (في النظام الحقيقي يشمل أيضاً فتح الملفات وتنزيلها وطباعتها وعنوان الجهاز).</p>
+ <div class="card tw"><table><tr><th>الوقت</th><th>المستخدم</th><th>العملية</th><th>المرجع</th></tr>
+ ${S.audit.slice(0,150).map(e=>`<tr><td class="small">${fmtDT(e.at)}</td><td>${esc(U(e.u).name)}</td><td>${esc(e.action)}</td><td class="small fpr">${esc(e.ref)}</td></tr>`).join('')}</table></div>`;
+}
+
+function viewVerify(ref){
+ const m=S.meetings.find(x=>x.ref===decodeURIComponent(ref||''));
+ if(!m)return `<div class="card empty">❌ لم يتم العثور على محضر بهذا الرقم المرجعي. قد تكون الوثيقة غير صادرة عن النظام.</div>`;
+ const okSt=['ready_print','archived'].includes(m.status);
+ return `<h1>التحقق من محضر</h1><p class="sub">هذه الصفحة تظهر عند مسح رمز QR الموجود على المحضر المطبوع.</p>
+ <div class="card"><div class="row" style="margin-bottom:12px">${okSt?chip('✓ محضر صادر عن النظام ومعتمد','c-green'):chip('⚠️ المحضر غير معتمد بعد','c-amber')}</div>
+ <table><tr><th style="width:180px">الرقم المرجعي</th><td class="fpr">${esc(m.ref)}</td></tr><tr><th>اللجنة</th><td>${esc(com(m.committeeId).name)}</td></tr><tr><th>تاريخ الاجتماع</th><td>${fmtD(m.date)}</td></tr><tr><th>الحالة</th><td>${stChip(m)}</td></tr><tr><th>بصمة المحضر</th><td class="fpr">${m.fingerprint||'—'}</td></tr></table>
+ <p class="small muted" style="margin-bottom:0">قارن البصمة أعلاه بالبصمة المطبوعة أسفل المحضر الورقي؛ أي اختلاف يعني أن المحضر عُدّل بعد اعتماده. لا تُعرض تفاصيل المحضر هنا حفاظاً على السرية.</p></div>`;
+}
+
+/* ---------- print ---------- */
+function openPrint(m){
+ const c=com(m.committeeId),pr=m.attendees.filter(x=>x.present),ab=m.attendees.filter(x=>!x.present);
+ const url=location.href.split('#')[0]+'#/verify/'+encodeURIComponent(m.ref);
+ const w=document.createElement('div');w.id='printWrap';
+ w.innerHTML=`<div class="bar"><button class="btn pri" onclick="window.print()">🖨️ طباعة</button><button class="btn" onclick="document.getElementById('printWrap').remove()">إغلاق</button></div>
+ <div class="sheet">${m.classification!=='normal'?`<div class="wm">${CLS[m.classification][0]}</div>`:''}
+  <div class="sh"><div><div class="small" style="color:#555">[ شعار واسم الشركة ]</div><h2>محضر اجتماع ${esc(c.name)}</h2><div><b>${esc(m.title)}</b></div><div class="small">الرقم المرجعي: <span class="fpr">${esc(m.ref)}</span> · التصنيف: ${CLS[m.classification][0]}</div></div><div class="qr" id="qrBox"></div></div>
+  <table><tr><th>نوع الاجتماع</th><td>${esc(m.type)}</td><th>التاريخ</th><td>${fmtD(m.date)}</td></tr><tr><th>الوقت</th><td>${m.time}</td><th>المكان</th><td>${esc(m.location)}</td></tr>
+  <tr><th>الحضور</th><td colspan="3">${pr.map(x=>esc(U(x.u).name)).join('، ')}</td></tr><tr><th>المعتذرون / الغائبون</th><td colspan="3">${ab.map(x=>esc(U(x.u).name)+(x.reason?` (${esc(x.reason)})`:'')).join('، ')||'—'}</td></tr></table>
+  ${m.minutes?`<p style="white-space:pre-wrap">${esc(m.minutes)}</p>`:''}
+  <table><tr><th>#</th><th>البند</th><th>القرار</th><th>التصويت</th><th>المسؤول / الاستحقاق</th></tr>${m.agenda.map((i,n)=>{const t=tally(i);return `<tr><td>${n+1}</td><td>${esc(i.title)}</td><td>${esc(i.decision)||'—'}</td><td style="white-space:nowrap">${i.decision?`موافق ${t.yes}<br>معارض ${t.no}<br>ممتنع ${t.abstain}`:'—'}</td><td>${i.owner?esc(U(i.owner).name)+'<br>'+i.due:'—'}</td></tr>`}).join('')}</table>
+  <h3>التواقيع</h3><table class="sig"><tr><th>الاسم</th><th>الصفة في اللجنة</th><th style="width:40%">التوقيع</th></tr>${pr.map(x=>`<tr><td>${esc(U(x.u).name)}</td><td>${ROLE[x.r]}</td><td></td></tr>`).join('')}</table>
+  <div class="foot"><span>بصمة المحضر: <b class="fpr">${m.fingerprint}</b></span><span>للتحقق من أصالة المحضر امسح رمز QR</span><span>طُبع بواسطة ${esc(U(me()).name)} · ${fmtDT(now())}</span></div>
+ </div>`;
+ document.body.appendChild(w);
+ const q=document.getElementById('qrBox');
+ try{if(window.QRCode)new QRCode(q,{text:url,width:192,height:192,correctLevel:QRCode.CorrectLevel.M});else q.innerHTML='<div class="small" style="border:1px dashed #999;height:96px;display:grid;place-items:center;text-align:center">QR</div>'}catch(e){}
+}
+
+/* ---------- router ---------- */
+const NAV=[['','🏠','الرئيسية','الرئيسية'],['meetings','🗓️','الاجتماعات','الاجتماعات'],['new','➕','اجتماع جديد','جديد'],['decisions','✅','متابعة القرارات','القرارات'],['archive','🗄️','الأرشيف','الأرشيف'],['committees','👥','اللجان والأعضاء','اللجان'],['audit','🛡️','سجل التدقيق','التدقيق']];
+function render(){
+ const p=(location.hash||'#/').split('/'),r=p[1]||'',arg=p[2];
+ document.getElementById('nav').innerHTML=NAV.filter(([k])=>k!=='audit'||isAdmin()).filter(([k])=>k!=='new'||S.committees.some(c=>isCoord(c.id))).map(([k,i,l,sl])=>`<a href="#/${k}" title="${l}" class="${r===k||(r==='meeting'&&k==='meetings')?'on':''}"><span class="ic">${i}</span><span class="lb">${l}</span><span class="sb">${sl}</span></a>`).join('');
+ document.getElementById('persona').innerHTML=Object.keys(S.users).map(u=>`<option value="${u}" ${u===me()?'selected':''}>${esc(U(u).name)} — ${esc(U(u).title)}</option>`).join('');
+ document.getElementById('rolechips').innerHTML=roleSummary(me())||chip('بدون عضوية في لجان','c-gray');
+ const v={'':viewDash,meetings:viewMeetings,new:viewNew,decisions:viewDecisions,archive:viewArchive,committees:viewCommittees,audit:viewAudit};
+ document.getElementById('view').innerHTML=r==='meeting'?viewMeeting(arg):r==='verify'?viewVerify(arg):(v[r]||viewDash)();
+ labelTables();
+ const cur=document.querySelector('.stepper .step.cur');if(cur){const sp=cur.parentElement;sp.scrollLeft=cur.offsetLeft-sp.clientWidth/2+cur.clientWidth/2}
+}
+/* على الموبايل تتحول الجداول لبطاقات: نضيف اسم العمود لكل خلية */
+function labelTables(){document.querySelectorAll('#view table').forEach(t=>{const rows=t.rows;if(!rows.length)return;const hd=[...rows[0].cells];if(!hd.every(c=>c.tagName==='TH'))return;t.classList.add('stk');for(let i=1;i<rows.length;i++)[...rows[i].cells].forEach((c,j)=>{c.dataset.label=c.colSpan>1?'':(hd[j]?hd[j].textContent.trim():'')})})}
+window.addEventListener('hashchange',()=>{render();window.scrollTo(0,0)});
+
+/* ---------- actions ---------- */
+document.addEventListener('click',e=>{
+ const el=e.target.closest('[data-act]');if(!el)return;
+ const a=el.dataset.act,m=el.dataset.id?S.meetings.find(x=>x.id===el.dataset.id):null;let after=null;
+ switch(a){
+  case 'filter':filter=el.dataset.v;break;
+  case 'decFilter':decFilter=el.dataset.v;break;
+  case 'reset':if(!confirm('إعادة جميع البيانات التجريبية لوضعها الأصلي؟'))return;S=seed();location.hash='#/';break;
+  case 'submit':m.status='pending';log('إرسال المسودة لاعتماد الرئيس',m);toast('تم إرسال الاجتماع لرئيس اللجنة للاعتماد');break;
+  case 'approve':m.attendees=activeMembers(com(m.committeeId)).map(x=>({u:x.u,r:x.r,rsvp:x.r==='coordinator'?'yes':'pending',present:false,reason:''}));m.status='scheduled';log('اعتماد عقد الاجتماع وإرسال الدعوات',m);toast(`✉️ تم إرسال الدعوات إلى ${m.attendees.length} أعضاء مع جدول الأعمال والمرفقات`);break;
+  case 'reject':{const n=prompt('سبب الإعادة للمنسق:');if(n===null)return;m.status='draft';m.comments.push({u:me(),t:'ملاحظة إعادة: '+n,at:now()});log('إعادة المسودة للمنسق للتعديل',m);break}
+  case 'rsvp':{const at=myAtt(m);if(el.dataset.v==='no'){const r=prompt('سبب الاعتذار:');if(r===null)return;at.reason=r}else at.reason='';at.rsvp=el.dataset.v;log(el.dataset.v==='yes'?'تأكيد الحضور':'الاعتذار عن الحضور',m);break}
+  case 'remind':{const n=m.attendees.filter(x=>x.rsvp==='pending').length;log('إرسال تذكير بموعد الاجتماع',m);toast(`🔔 تم إرسال تذكير إلى ${n} عضو لم يؤكدوا الحضور`);break}
+  case 'start':m.status='in_session';m.attendees.forEach(x=>x.present=x.rsvp==='yes');log('بدء الاجتماع وتسجيل الحضور',m);break;
+  case 'present':{const x=m.attendees.find(y=>y.u===el.dataset.u);x.present=!x.present;log(`${x.present?'تسجيل حضور':'تسجيل غياب'}: ${U(x.u).name}`,m);break}
+  case 'vote':{const it=m.agenda.find(x=>x.id===el.dataset.item);it.votes[me()]=el.dataset.v;log(`تصويت على البند: ${it.title}`,m);break}
+  case 'end':{const p=m.attendees.filter(x=>x.present).length;if(p<=m.attendees.length/2&&!confirm('النصاب غير مكتمل. هل تريد إنهاء الاجتماع على أي حال؟'))return;m.status='minutes_draft';log('إنهاء الاجتماع',m);break}
+  case 'toReview':if(!m.minutes.trim()){toast('اكتب نص المحضر أولاً');return}m.status='minutes_review';m.minutesApprovals={};log('إرسال المحضر للمراجعة',m);toast('📨 أُرسل المحضر للأعضاء الحاضرين للمراجعة والموافقة');break;
+  case 'okMin':m.minutesApprovals[me()]=true;log('الموافقة على المحضر',m);break;
+  case 'comment':{const t=prompt('ملاحظتك على المحضر:');if(!t)return;m.comments.push({u:me(),t,at:now()});log('إضافة ملاحظة على المحضر',m);break}
+  case 'finalize':{const pr=m.attendees.filter(x=>x.present),miss=pr.filter(x=>!m.minutesApprovals[x.u]&&x.u!==me()).length;if(miss&&!confirm(`${miss} من الأعضاء لم يوافقوا بعد. هل تريد الاعتماد النهائي؟`))return;m.minutesApprovals[me()]=true;m.status='ready_print';m.fingerprint=fp(m);log('الاعتماد النهائي للمحضر',m);break}
+  case 'print':log('طباعة المحضر',m);after=()=>openPrint(m);break;
+  case 'delDraft':if(!confirm('حذف المسودة؟'))return;S.meetings=S.meetings.filter(x=>x!==m);log('حذف مسودة: '+m.title,null);location.hash='#/meetings';break;
+  case 'endMember':{const c=com(el.dataset.c),x=c.members[+el.dataset.n];if(!confirm(`إنهاء عضوية ${U(x.u).name}؟`))return;x.to=TODAY;log(`إنهاء عضوية ${U(x.u).name} في ${c.name}`,null);break}
+  case 'addMember':{const c=com(el.dataset.c),u=document.getElementById('nu-'+c.id).value,r=document.getElementById('nr-'+c.id).value;if(!u)return;if(r!=='member')activeMembers(c).forEach(x=>{if(x.r===r)x.to=TODAY});c.members.push({u,r,from:TODAY});log(`إضافة ${U(u).name} إلى ${c.name} بصفة ${ROLE[r]}`,null);break}
+  default:return;
+ }
+ save();render();if(after)after();
+});
+
+document.addEventListener('change',e=>{
+ const el=e.target.closest('[data-change]');if(!el)return;
+ const a=el.dataset.change,m=el.dataset.id?S.meetings.find(x=>x.id===el.dataset.id):null,it=m&&el.dataset.item?m.agenda.find(x=>x.id===el.dataset.item):null;
+ switch(a){
+  case 'persona':S.me=el.value;save();render();toast('تم الدخول باسم '+U(S.me).name);return;
+  case 'dec':it.decision=el.value;break;
+  case 'owner':it.owner=el.value;break;
+  case 'due':it.due=el.value;break;
+  case 'minutes':m.minutes=el.value;break;
+  case 'dstatus':it.dstatus=el.value;log(`تحديث حالة قرار إلى: ${DST[el.value][0]}`,m);save();render();toast('تم تحديث حالة القرار');return;
+  case 'upload':{const f=el.files[0];if(!f)return;m.signedFile=f.name;m.fingerprint=m.fingerprint||fp(m);m.status='archived';m.agenda.forEach(i=>{if(i.decision&&!i.dstatus)i.dstatus='not_started'});log('رفع النسخة الموقعة وأرشفة الاجتماع',m);save();render();toast('🔒 تمت الأرشفة وإقفال الاجتماع');return}
+ }
+ save();
+});
+
+document.addEventListener('submit',e=>{
+ if(e.target.id!=='newForm')return;e.preventDefault();
+ const f=new FormData(e.target),id='m'+(++S.seq);
+ const m=mk({id,ref:`MTG-${YEAR}-${String(S.seq).padStart(3,'0')}`,committeeId:f.get('c'),type:f.get('type'),title:f.get('title'),date:f.get('date'),time:f.get('time'),location:f.get('loc'),classification:f.get('cls'),status:'draft',
+  agenda:f.get('agenda').split('\n').map(s=>s.trim()).filter(Boolean).map((t,n)=>item('a'+(n+1),t)),
+  attachments:[...e.target.files.files].map(x=>x.name)});
+ S.meetings.push(m);log('إنشاء الاجتماع كمسودة',m);save();toast('تم حفظ الاجتماع كمسودة');location.hash='#/meeting/'+id;
+});
+
+render();
+</script>
+</body>
+</html>
